@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+<!-- TEMPORARY TEMPLATE - frontend will be implemented separately -->
+{% block content %}
+<h2>Painel Wi-Fi</h2>
+<p>Usuários: {{ total_usuarios }} | Bloqueados: {{ total_bloqueados }} | Sessões ativas: {{ total_sessoes_ativas }}</p>
+<h3>Usuários</h3>
+<ul>
+{% for usuario in usuarios %}
+    <li>{{ usuario.username }} — {% if usuario.perfil_wifi.bloqueado %}Bloqueado{% else %}Desbloqueado{% endif %}
+        <form method="post" action="{% if usuario.perfil_wifi.bloqueado %}{% url 'portal:unblock_user' usuario.pk %}{% else %}{% url 'portal:block_user' usuario.pk %}{% endif %}">
+            {% csrf_token %}<button type="submit">{% if usuario.perfil_wifi.bloqueado %}Desbloquear{% else %}Bloquear{% endif %}</button>
+        </form>
+    </li>
+{% empty %}<li>Nenhum usuário.</li>{% endfor %}
+</ul>
+<h3>Sessões ativas</h3>
+<ul>
+{% for sessao in sessoes_ativas %}
+    <li>{{ sessao.usuario.username }} | IP: {{ sessao.ip_address|default_if_none:"—" }} | MAC: {{ sessao.mac_address|default:"—" }} | {{ sessao.iniciada_em }}</li>
+{% empty %}<li>Nenhuma sessão ativa.</li>{% endfor %}
+</ul>
+<p><a href="{% url 'portal:home' %}">Voltar ao portal</a></p>
+{% endblock %}

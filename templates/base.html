@@ -1,0 +1,12 @@
+<!-- TEMPORARY TEMPLATE - frontend will be implemented separately -->
+<!doctype html>
+<html lang="pt-br">
+<head><meta charset="utf-8"><title>ITC Wi-Fi Auth</title></head>
+<body>
+    <h1>ITC Wi-Fi Auth</h1>
+    {% if messages %}
+    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</body>
+</html>
