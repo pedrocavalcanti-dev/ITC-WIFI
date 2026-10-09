@@ -138,3 +138,19 @@ TEST_RUNNER = "config.test_runner.ProjectTestRunner"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# =============================================================================
+# MOONSHIELD INTEGRATION
+# =============================================================================
+import sys
+MOONSHIELD_API_ENABLED = os.getenv("MOONSHIELD_API_ENABLED", "false").strip().lower() in {"1", "true", "yes", "on"}
+if 'test' in sys.argv:
+    MOONSHIELD_API_ENABLED = False
+MOONSHIELD_API_URL = os.getenv("MOONSHIELD_API_URL", "").strip()
+MOONSHIELD_API_TOKEN = os.getenv("MOONSHIELD_API_TOKEN", "")
+try:
+    MOONSHIELD_API_TIMEOUT = int(os.getenv("MOONSHIELD_API_TIMEOUT", "5").strip())
+except ValueError:
+    MOONSHIELD_API_TIMEOUT = 5
+
+MOONSHIELD_DEV_CLIENT_IP = os.getenv("MOONSHIELD_DEV_CLIENT_IP", "").strip()

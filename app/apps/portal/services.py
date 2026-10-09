@@ -6,6 +6,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from .models import Dispositivo, LogAcesso, PerfilWifi, SessaoWifi, _normalize_mac
+from .moonshield import moonshield_client, MoonShieldUnavailable, MoonShieldRejected, MoonShieldProtocolError
 
 
 @dataclass
@@ -46,6 +47,22 @@ def authorize_client(user, ip_address=None, mac_address=None, request=None):
         )
         return AuthResult(False, "Acesso Wi-Fi bloqueado para este usuário.")
 
+    # Integração MoonShield
+    moonshield_auth_id = None
+    if ip:
+        try:
+            response = moonshield_client.authorize(user.username, ip)
+            if response and response.get("ok"):
+                moonshield_auth_id = response.get("authorization_id")
+        except MoonShieldUnavailable:
+            return AuthResult(False, "Não foi possível liberar o acesso à rede no momento. Tente novamente.")
+        except MoonShieldRejected as e:
+            return AuthResult(False, str(e))
+        except MoonShieldProtocolError:
+            return AuthResult(False, "Erro de comunicação com o sistema de firewall.")
+        except Exception:
+            return AuthResult(False, "Erro inesperado ao solicitar liberação de rede.")
+
     dispositivo = None
     if mac:
         dispositivo, _ = Dispositivo.objects.update_or_create(
@@ -61,9 +78,14 @@ def authorize_client(user, ip_address=None, mac_address=None, request=None):
         usuario=user, dispositivo=dispositivo, ip_address=ip, mac_address=mac,
         ativa=True, autorizada=True,
     )
+
+    detalhes = {"sessao_id": session.pk}
+    if moonshield_auth_id:
+        detalhes["moonshield_auth_id"] = moonshield_auth_id
+
     LogAcesso.objects.create(
         usuario=user, evento=LogAcesso.Evento.AUTORIZACAO_WIFI,
-        ip_address=ip, mac_address=mac, detalhes={"sessao_id": session.pk},
+        ip_address=ip, mac_address=mac, detalhes=detalhes,
     )
     return AuthResult(True, "Sessão Wi-Fi autorizada localmente.", session)
 
@@ -81,6 +103,19 @@ def revoke_client(user, ip_address=None, mac_address=None):
         if not mac:
             return AuthResult(False, "Endereço MAC inválido.")
         sessions = sessions.filter(mac_address=mac)
+
+    # Integração MoonShield
+    ips_to_revoke = set(sessions.values_list('ip_address', flat=True))
+    if ip_address:
+        ips_to_revoke.add(_validated_ip(ip_address))
+
+    for ip_to_revoke in ips_to_revoke:
+        if ip_to_revoke:
+            try:
+                moonshield_client.revoke(ip_to_revoke, reason="Revogação via portal")
+            except Exception:
+                pass
+
     last_session = sessions.first()
     count = sessions.update(ativa=False, encerrada_em=timezone.now())
     if last_session:
