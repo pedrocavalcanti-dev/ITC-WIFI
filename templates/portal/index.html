@@ -4,150 +4,344 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0f3d91">
+    <meta name="theme-color" content="#0b2545">
     <title>{% if user.is_authenticated %}Meu acesso{% else %}Entrar{% endif %} · ITC Wi-Fi</title>
+    
+    <!-- Favicon Institucional ITC -->
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+    
+    <!-- Tipografia Institucional (Plus Jakarta Sans com fallback refinado) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{% static 'css/portal.css' %}">
     <script src="{% static 'js/portal.js' %}" defer></script>
 </head>
 <body>
+    <!-- Splash screen institucional ágil e não-intrusiva -->
     <div class="splash" aria-hidden="true">
         <div class="splash-brand">
+            <div class="splash-badge">
+                <svg viewBox="0 0 40 40" fill="none" class="splash-icon">
+                    <rect width="40" height="40" rx="10" fill="rgba(255,255,255,0.1)"/>
+                    <path d="M12 12h16M20 12v16M14 28h12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </div>
             <span class="splash-wordmark">ITC<span class="brand-dot">.</span></span>
-            <p>Instituto Tecnológico<br>Campineiro</p>
+            <p>Instituto Tecnológico Campineiro</p>
             <span class="splash-line"></span>
         </div>
     </div>
+
     <div class="portal-shell" data-initial-mode="{% if register_form.errors %}register{% else %}login{% endif %}" data-has-submission="{% if login_form.is_bound or register_form.is_bound %}true{% else %}false{% endif %}">
+        
+        <!-- Elementos decorativos sutis de fundo -->
+        <div class="bg-mesh" aria-hidden="true">
+            <div class="glow-orb glow-top"></div>
+            <div class="glow-orb glow-bottom"></div>
+            <div class="grid-overlay"></div>
+        </div>
+
+        <!-- Cabeçalho institucional -->
         <header class="site-header">
             <a class="brand" href="{% url 'portal:home' %}" aria-label="ITC — início">
-                <span class="wordmark">ITC<span class="brand-dot">.</span></span>
-                <span class="brand-name">Instituto Tecnológico<br>Campineiro</span>
+                <div class="brand-emblem" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="9" fill="url(#headerEmblemGrad)"/>
+                        <path d="M9 10h14M16 10v12M11 22h10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="23" cy="9" r="2" fill="#38bdf8"/>
+                        <defs>
+                            <linearGradient id="headerEmblemGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#0f2b5c"/>
+                                <stop offset="1" stop-color="#1e40af"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="wordmark">ITC<span class="brand-dot">.</span></span>
+                    <span class="brand-name">Instituto Tecnológico<br>Campineiro</span>
+                </div>
             </a>
-            <span class="network-label"><span></span>Wi-Fi educacional</span>
+
+            <div class="network-badge" title="Rede institucional protegida pelo MoonShield">
+                <span class="status-indicator">
+                    <span class="status-pulse"></span>
+                    <span class="status-dot"></span>
+                </span>
+                <div class="network-badge-text">
+                    <span class="badge-title">Wi-Fi Educacional</span>
+                    <span class="badge-sub">Acesso Seguro · MoonShield</span>
+                </div>
+            </div>
         </header>
+
+        <!-- Conteúdo principal -->
         <main class="portal-main" id="conteudo">
             <section class="auth-card" aria-label="Acesso à rede ITC">
+                
+                <!-- Cabeçalho do Card com Selo Institucional de Tecnologia -->
                 <div class="card-brand">
-                    <span class="wifi-symbol" aria-hidden="true">
-                        <svg viewBox="0 0 32 32" fill="none"><path d="M4 12a18 18 0 0 1 24 0M8.5 17a11 11 0 0 1 15 0M13 22a4.5 4.5 0 0 1 6 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="27" r="1.6" fill="currentColor"/></svg>
-                    </span>
-                    <span class="eyebrow">SEU ACESSO AO ITC</span>
+                    <div class="institutional-seal" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" fill="none">
+                            <defs>
+                                <linearGradient id="sealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#1d4ed8"/>
+                                    <stop offset="100%" stop-color="#0f2b5c"/>
+                                </linearGradient>
+                                <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#38bdf8"/>
+                                    <stop offset="100%" stop-color="#2563eb"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Hex-Shield / Símbolo Institucional de Acesso Digital -->
+                            <rect x="4" y="4" width="40" height="40" rx="14" fill="url(#sealGrad)"/>
+                            <rect x="5.5" y="5.5" width="37" height="37" rx="12.5" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                            <!-- Trajetos de circuito e chave de segurança do ITC -->
+                            <path d="M15 24h6l3-6 4 12 3-6h5" stroke="url(#glowGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="15" cy="24" r="2" fill="#38bdf8"/>
+                            <circle cx="37" cy="24" r="2" fill="#ffffff"/>
+                            <path d="M24 12v3M24 33v3" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="card-brand-info">
+                        <span class="eyebrow">PORTAL INSTITUCIONAL</span>
+                        <h2 class="card-brand-title">Controle de Acesso</h2>
+                    </div>
                 </div>
+
+                <!-- Notificações e mensagens do sistema Django -->
                 {% if messages %}
                 <div class="messages" aria-live="polite">
-                    {% for message in messages %}<p class="notice {{ message.tags }}">{{ message }}</p>{% endfor %}
+                    {% for message in messages %}
+                    <div class="notice {{ message.tags }}">
+                        <span class="notice-icon" aria-hidden="true">
+                            {% if message.tags == 'success' %}
+                            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            {% elif message.tags == 'error' %}
+                            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            {% else %}
+                            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                            {% endif %}
+                        </span>
+                        <div class="notice-content">{{ message }}</div>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
+
+                <!-- Visualização de Usuário Autenticado -->
                 {% if user.is_authenticated %}
                 <div class="account-panel">
-                    <span class="connection-icon {% if perfil.bloqueado %}is-blocked{% endif %}" aria-hidden="true">
-                        {% if perfil.bloqueado %}
-                        <svg viewBox="0 0 24 24" fill="none"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        {% elif wifi_session and wifi_session.autorizada %}
-                        <svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        {% else %}
-                        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                        {% endif %}
-                    </span>
-                    <h1>{% if perfil.bloqueado %}Acesso bloqueado{% elif wifi_session and wifi_session.autorizada %}Conectado{% else %}Acesso pendente{% endif %}</h1>
-                    <p class="subtitle">Olá, {{ user.username }}.</p>
-                    <div class="session-status {% if perfil.bloqueado %}is-blocked{% endif %}">
-                        {% if perfil.bloqueado %}
-                        <strong>Acesso Wi-Fi bloqueado</strong>
-                        <p>Procure a equipe responsável pelo laboratório.</p>
-                        {% elif wifi_session and wifi_session.autorizada %}
-                        <p>Seu acesso à rede foi autorizado.</p>
-                        {% if wifi_session.ip_address %}<span class="session-ip">IP {{ wifi_session.ip_address }}</span>{% endif %}
-                        {% else %}
-                        <strong>Nenhuma sessão Wi-Fi ativa</strong>
-                        <p>Saia e entre novamente para registrar seu acesso.</p>
-                        {% endif %}
+                    <div class="connection-status-hero">
+                        <span class="connection-icon {% if perfil.bloqueado %}is-blocked{% elif wifi_session and wifi_session.autorizada %}is-connected{% else %}is-pending{% endif %}" aria-hidden="true">
+                            {% if perfil.bloqueado %}
+                            <svg viewBox="0 0 24 24" fill="none"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>
+                            {% elif wifi_session and wifi_session.autorizada %}
+                            <svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>
+                            {% else %}
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+                            {% endif %}
+                        </span>
+                        <h1>{% if perfil.bloqueado %}Acesso Bloqueado{% elif wifi_session and wifi_session.autorizada %}Conectado com Sucesso{% else %}Acesso Pendente{% endif %}</h1>
+                        <p class="subtitle">Bem-vindo(a) ao ambiente acadêmico, <strong>{{ user.username }}</strong>.</p>
                     </div>
-                    {% if user.is_staff %}<a class="secondary-button" href="{% url 'portal:dashboard' %}">Abrir painel de administração</a>{% endif %}
-                    <form method="post" action="{% url 'portal:logout' %}" data-submit-label="Saindo...">
+
+                    <div class="session-status {% if perfil.bloqueado %}is-blocked{% elif wifi_session and wifi_session.autorizada %}is-connected{% endif %}">
+                        <div class="session-status-header">
+                            <span class="session-status-tag">
+                                {% if perfil.bloqueado %}RESTRITO{% elif wifi_session and wifi_session.autorizada %}ATIVO{% else %}AGUARDANDO{% endif %}
+                            </span>
+                            <span class="session-engine">MoonShield NAC</span>
+                        </div>
+                        
+                        <div class="session-status-body">
+                            {% if perfil.bloqueado %}
+                            <strong>Acesso à rede Wi-Fi suspenso</strong>
+                            <p>O acesso deste perfil foi bloqueado administrativamente. Por favor, procure o suporte técnico de TI do campus ou a coordenação de laboratórios.</p>
+                            {% elif wifi_session and wifi_session.autorizada %}
+                            <p class="session-message">Seu dispositivo foi autenticado e autorizado na rede Wi-Fi educacional do ITC.</p>
+                            <div class="session-meta">
+                                {% if wifi_session.ip_address %}
+                                <div class="meta-item">
+                                    <span class="meta-label">IP Atribuído</span>
+                                    <span class="session-ip">{{ wifi_session.ip_address }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="meta-item">
+                                    <span class="meta-label">Segurança</span>
+                                    <span class="session-security">WPA2/3 Enterprise</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <strong>Nenhuma sessão Wi-Fi ativa</strong>
+                            <p>Não identificamos uma sessão ativa para este terminal. Conecte-se novamente para registrar o acesso.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if user.is_staff %}
+                    <a class="secondary-button admin-link" href="{% url 'portal:dashboard' %}">
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="11" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="11" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
+                        <span>Painel Administrativo Wi-Fi</span>
+                    </a>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'portal:logout' %}" data-submit-label="Desconectando...">
                         {% csrf_token %}
-                        <button class="primary-button" type="submit">
-                            <span data-button-label>Sair</span>
+                        <button class="primary-button logout-button" type="submit">
+                            <span data-button-label>Desconectar da Rede</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             <span class="button-loader" aria-hidden="true" hidden></span>
                         </button>
                     </form>
                 </div>
+
+                <!-- Visualização de Login e Cadastro (Não Autenticado) -->
                 {% else %}
-                <nav class="mode-switch" aria-label="Escolha seu acesso">
-                    <a href="#entrar" data-mode="login">Entrar</a>
-                    <a href="#cadastro" data-mode="register">Criar usuário</a>
+                <nav class="mode-switch" aria-label="Opções de autenticação">
+                    <a href="#entrar" data-mode="login">
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13 10H3m6-6-6 6 6 6M10 3h5a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Entrar</span>
+                    </a>
+                    <a href="#cadastro" data-mode="register">
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13 17v-1.5a3.5 3.5 0 0 0-3.5-3.5h-4A3.5 3.5 0 0 0 2 15.5V17M7.5 9a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm8.5 2v6m3-3h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Criar usuário</span>
+                    </a>
                 </nav>
+
+                <!-- Painel: Entrar (Login) -->
                 <section class="auth-panel" id="entrar" data-panel="login" aria-labelledby="login-title">
-                    <h1 id="login-title" tabindex="-1">Entrar</h1>
-                    <p class="subtitle">Acesse a rede do ITC.</p>
+                    <div class="panel-header">
+                        <h1 id="login-title" tabindex="-1">Entrar no Wi-Fi</h1>
+                        <p class="subtitle">Informe seu usuário e senha institucional para autenticar este dispositivo na rede.</p>
+                    </div>
+
                     <form method="post" action="{% url 'portal:login' %}" data-submit-label="Entrando...">
                         {% csrf_token %}
-                        {% if login_form.non_field_errors %}<div class="notice error" role="alert">{{ login_form.non_field_errors }}</div>{% endif %}
+                        {% if login_form.non_field_errors %}
+                        <div class="notice error" role="alert">
+                            <span class="notice-icon" aria-hidden="true">
+                                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <div class="notice-content">{{ login_form.non_field_errors }}</div>
+                        </div>
+                        {% endif %}
+
                         {% for field in login_form %}
                         <div class="form-field">
-                            <label for="login-{{ field.name }}">{{ field.label }}</label>
+                            <label for="login-{{ field.name }}">
+                                {{ field.label }}
+                                <span class="required-indicator" aria-hidden="true">*</span>
+                            </label>
                             <div class="input-wrap">
+                                <span class="input-leading-icon" aria-hidden="true">
+                                    {% if field.name == 'password' %}
+                                    <svg viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.6"/></svg>
+                                    {% else %}
+                                    <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 17a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                    {% endif %}
+                                </span>
                                 <input id="login-{{ field.name }}" name="{{ field.name }}"
-                                    {% if field.name == 'password' %}type="password" autocomplete="current-password" placeholder="Digite sua senha"
-                                    {% else %}type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="{{ field.field.max_length }}" value="{{ field.value|default_if_none:'' }}" placeholder="Digite seu usuário"{% endif %}
+                                    {% if field.name == 'password' %}type="password" autocomplete="current-password" placeholder="Digite sua senha cadastrada"
+                                    {% else %}type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="{{ field.field.max_length }}" value="{{ field.value|default_if_none:'' }}" placeholder="Digite seu nome de usuário"{% endif %}
                                     required {% if field.errors %}aria-invalid="true" aria-describedby="login-{{ field.name }}-errors"{% endif %}>
                                 {% if field.name == 'password' %}
                                 <button class="password-toggle" type="button" aria-controls="login-password" aria-label="Mostrar senha" aria-pressed="false" hidden>
-                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path class="eye-slash" d="m3 3 18 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/></svg>
+                                    <svg class="eye-slash" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.526 13.526 0 0 0 2 12s3.5 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                                 {% endif %}
                             </div>
                             {% if field.errors %}<div class="field-errors" id="login-{{ field.name }}-errors" role="alert">{{ field.errors }}</div>{% endif %}
                         </div>
                         {% endfor %}
+
                         <button class="primary-button" type="submit">
-                            <span data-button-label>Entrar</span>
-                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span data-button-label>Entrar na Rede</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             <span class="button-loader" aria-hidden="true" hidden></span>
                         </button>
                     </form>
-                    <p class="mode-prompt">Primeiro acesso? <a href="#cadastro" data-switch="register">Criar usuário</a></p>
+                    <p class="mode-prompt">Primeiro acesso à rede? <a href="#cadastro" data-switch="register">Criar meu usuário</a></p>
                 </section>
+
+                <!-- Painel: Criar Usuário (Cadastro) -->
                 <section class="auth-panel" id="cadastro" data-panel="register" aria-labelledby="register-title">
-                    <h1 id="register-title" tabindex="-1">Criar usuário</h1>
-                    <p class="subtitle">Cadastre seu acesso.</p>
+                    <div class="panel-header">
+                        <h1 id="register-title" tabindex="-1">Criar Usuário</h1>
+                        <p class="subtitle">Cadastre seu acesso exclusivo para navegar na infraestrutura do ITC.</p>
+                    </div>
+
                     <form method="post" action="{% url 'portal:register' %}" data-submit-label="Criando acesso...">
                         {% csrf_token %}
-                        {% if register_form.non_field_errors %}<div class="notice error" role="alert">{{ register_form.non_field_errors }}</div>{% endif %}
+                        {% if register_form.non_field_errors %}
+                        <div class="notice error" role="alert">
+                            <span class="notice-icon" aria-hidden="true">
+                                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                            </span>
+                            <div class="notice-content">{{ register_form.non_field_errors }}</div>
+                        </div>
+                        {% endif %}
+
                         {% for field in register_form %}
                         <div class="form-field">
-                            <label for="register-{{ field.name }}">{{ field.label }}</label>
+                            <label for="register-{{ field.name }}">
+                                {{ field.label }}
+                                <span class="required-indicator" aria-hidden="true">*</span>
+                            </label>
                             <div class="input-wrap">
+                                <span class="input-leading-icon" aria-hidden="true">
+                                    {% if field.name == 'password' %}
+                                    <svg viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.6"/></svg>
+                                    {% else %}
+                                    <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M4 17a6 6 0 0 1 12 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                    {% endif %}
+                                </span>
                                 <input id="register-{{ field.name }}" name="{{ field.name }}"
-                                    {% if field.name == 'password' %}type="password" autocomplete="new-password" placeholder="Digite sua senha"
-                                    {% else %}type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="{{ field.field.max_length }}" value="{{ field.value|default_if_none:'' }}" placeholder="Digite seu usuário"{% endif %}
+                                    {% if field.name == 'password' %}type="password" autocomplete="new-password" placeholder="Defina sua senha de acesso"
+                                    {% else %}type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="{{ field.field.max_length }}" value="{{ field.value|default_if_none:'' }}" placeholder="Escolha um nome de usuário"{% endif %}
                                     required {% if field.errors %}aria-invalid="true" aria-describedby="register-{{ field.name }}-errors"{% endif %}>
                                 {% if field.name == 'password' %}
                                 <button class="password-toggle" type="button" aria-controls="register-password" aria-label="Mostrar senha" aria-pressed="false" hidden>
-                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path class="eye-slash" d="m3 3 18 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                                    <svg class="eye-open" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/></svg>
+                                    <svg class="eye-slash" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.526 13.526 0 0 0 2 12s3.5 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
                                 {% endif %}
                             </div>
                             {% if field.errors %}<div class="field-errors" id="register-{{ field.name }}-errors" role="alert">{{ field.errors }}</div>{% endif %}
                         </div>
                         {% endfor %}
+
                         <button class="primary-button" type="submit">
-                            <span data-button-label>Cadastrar</span>
-                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span data-button-label>Cadastrar e Conectar</span>
+                            <svg class="button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             <span class="button-loader" aria-hidden="true" hidden></span>
                         </button>
                     </form>
-                    <p class="mode-prompt">Já faz parte do ITC? <a href="#entrar" data-switch="login">Já tenho usuário</a></p>
+                    <p class="mode-prompt">Já possui cadastro institucional? <a href="#entrar" data-switch="login">Acessar minha conta</a></p>
                 </section>
                 {% endif %}
+
+                <!-- Rodapé do Card com Selo de Confiabilidade -->
                 <div class="card-footer">
-                    <svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><rect x="4.5" y="8" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M7 8V5a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.4"/></svg>
-                    Ambiente educacional ITC
+                    <span class="security-lock-icon" aria-hidden="true">
+                        <svg viewBox="0 0 20 20" fill="none"><rect x="4.5" y="8" width="11" height="8.5" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 8V5.5a3 3 0 0 1 6 0V8" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </span>
+                    <span>Ambiente acadêmico monitorado · Políticas de uso ético ITC</span>
                 </div>
             </section>
-            <p class="page-caption">Conecte-se a novas possibilidades.</p>
+
+            <!-- Microcopy de Campus -->
+            <p class="page-caption">Instituto Tecnológico Campineiro · Conectividade & Inovação</p>
         </main>
-        <footer class="site-footer"><span>Portal de autenticação Wi-Fi</span><span>ITC · Tecnologia e educação</span></footer>
+
+        <!-- Rodapé do Portal -->
+        <footer class="site-footer">
+            <span class="footer-primary">Portal de Autenticação Wi-Fi · MoonShield NAC</span>
+            <span class="footer-secondary">© 2026 ITC · Instituto Tecnológico Campineiro</span>
+        </footer>
     </div>
 </body>
 </html>

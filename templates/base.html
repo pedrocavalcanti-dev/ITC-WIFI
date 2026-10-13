@@ -1,12 +1,76 @@
-<!-- TEMPORARY TEMPLATE - frontend will be implemented separately -->
+{% load static %}
 <!doctype html>
 <html lang="pt-br">
-<head><meta charset="utf-8"><title>ITC Wi-Fi Auth</title></head>
-<body>
-    <h1>ITC Wi-Fi Auth</h1>
-    {% if messages %}
-    <ul>{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>
-    {% endif %}
-    {% block content %}{% endblock %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b2545">
+    <title>{% block title %}Painel Administrativo{% endblock %} · ITC Wi-Fi</title>
+    
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'css/portal.css' %}">
+</head>
+<body class="dashboard-body">
+    <div class="portal-shell dashboard-shell">
+        <header class="site-header">
+            <a class="brand" href="{% url 'portal:home' %}" aria-label="ITC — início">
+                <div class="brand-emblem" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="9" fill="#0f2b5c"/>
+                        <path d="M9 10h14M16 10v12M11 22h10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="23" cy="9" r="2" fill="#38bdf8"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="wordmark">ITC<span class="brand-dot">.</span></span>
+                    <span class="brand-name">Instituto Tecnológico<br>Campineiro</span>
+                </div>
+            </a>
+
+            <div class="network-badge">
+                <span class="status-indicator">
+                    <span class="status-pulse"></span>
+                    <span class="status-dot"></span>
+                </span>
+                <div class="network-badge-text">
+                    <span class="badge-title">Administração NAC</span>
+                    <span class="badge-sub">MoonShield Core</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main" id="conteudo">
+            {% if messages %}
+            <div class="messages" aria-live="polite">
+                {% for message in messages %}
+                <div class="notice {{ message.tags }}">
+                    <span class="notice-icon" aria-hidden="true">
+                        {% if message.tags == 'success' %}
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        {% elif message.tags == 'error' %}
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                        {% else %}
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                        {% endif %}
+                    </span>
+                    <div class="notice-content">{{ message }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <span>ITC Wi-Fi · Painel Administrativo MoonShield</span>
+            <span>© Instituto Tecnológico Campineiro</span>
+        </footer>
+    </div>
 </body>
 </html>

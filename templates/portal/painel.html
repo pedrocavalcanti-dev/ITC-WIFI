@@ -1,23 +1,136 @@
 {% extends "base.html" %}
-<!-- TEMPORARY TEMPLATE - frontend will be implemented separately -->
+
+{% block title %}Painel de Controle Wi-Fi{% endblock %}
+
 {% block content %}
-<h2>Painel Wi-Fi</h2>
-<p>Usuários: {{ total_usuarios }} | Bloqueados: {{ total_bloqueados }} | Sessões ativas: {{ total_sessoes_ativas }}</p>
-<h3>Usuários</h3>
-<ul>
-{% for usuario in usuarios %}
-    <li>{{ usuario.username }} — {% if usuario.perfil_wifi.bloqueado %}Bloqueado{% else %}Desbloqueado{% endif %}
-        <form method="post" action="{% if usuario.perfil_wifi.bloqueado %}{% url 'portal:unblock_user' usuario.pk %}{% else %}{% url 'portal:block_user' usuario.pk %}{% endif %}">
-            {% csrf_token %}<button type="submit">{% if usuario.perfil_wifi.bloqueado %}Desbloquear{% else %}Bloquear{% endif %}</button>
-        </form>
-    </li>
-{% empty %}<li>Nenhum usuário.</li>{% endfor %}
-</ul>
-<h3>Sessões ativas</h3>
-<ul>
-{% for sessao in sessoes_ativas %}
-    <li>{{ sessao.usuario.username }} | IP: {{ sessao.ip_address|default_if_none:"—" }} | MAC: {{ sessao.mac_address|default:"—" }} | {{ sessao.iniciada_em }}</li>
-{% empty %}<li>Nenhuma sessão ativa.</li>{% endfor %}
-</ul>
-<p><a href="{% url 'portal:home' %}">Voltar ao portal</a></p>
+<div class="dashboard-container">
+    <div class="dashboard-header-block">
+        <div>
+            <h1 class="dashboard-title">Controle de Rede Wi-Fi</h1>
+            <p class="dashboard-subtitle">Monitoramento de sessões ativas e gerenciamento de permissões do MoonShield.</p>
+        </div>
+        <a class="secondary-button back-link" href="{% url 'portal:home' %}">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15 10H5m4-5-5 5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Voltar ao Portal</span>
+        </a>
+    </div>
+
+    <!-- Estatísticas em Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total de Usuários</span>
+            <span class="stat-value">{{ total_usuarios }}</span>
+            <span class="stat-caption">Cadastrados no sistema</span>
+        </div>
+        <div class="stat-card stat-success">
+            <span class="stat-label">Sessões Ativas</span>
+            <span class="stat-value">{{ total_sessoes_ativas }}</span>
+            <span class="stat-caption">Conectados agora no campus</span>
+        </div>
+        <div class="stat-card {% if total_bloqueados > 0 %}stat-warning{% endif %}">
+            <span class="stat-label">Acessos Bloqueados</span>
+            <span class="stat-value">{{ total_bloqueados }}</span>
+            <span class="stat-caption">Restrição administrativa</span>
+        </div>
+    </div>
+
+    <div class="dashboard-sections-grid">
+        <!-- Sessões Ativas -->
+        <section class="dashboard-section" aria-labelledby="sessoes-title">
+            <div class="section-header">
+                <h2 id="sessoes-title">Sessões Ativas em Tempo Real</h2>
+                <span class="badge-count">{{ sessoes_ativas|length }} ativas</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Endereço IP</th>
+                            <th>MAC Address</th>
+                            <th>Início da Sessão</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sessao in sessoes_ativas %}
+                        <tr>
+                            <td class="cell-user">
+                                <span class="user-avatar-badge">{{ sessao.usuario.username|slice:":1"|upper }}</span>
+                                <strong>{{ sessao.usuario.username }}</strong>
+                            </td>
+                            <td><code class="code-tag">{{ sessao.ip_address|default_if_none:"—" }}</code></td>
+                            <td><code class="code-tag">{{ sessao.mac_address|default:"—" }}</code></td>
+                            <td class="cell-date">{{ sessao.iniciada_em }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <span>Nenhuma sessão ativa no momento.</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gerenciamento de Usuários -->
+        <section class="dashboard-section" aria-labelledby="usuarios-title">
+            <div class="section-header">
+                <h2 id="usuarios-title">Gerenciamento de Acessos</h2>
+                <span class="badge-count">{{ usuarios|length }} total</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Status Wi-Fi</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td class="cell-user">
+                                <span class="user-avatar-badge">{{ usuario.username|slice:":1"|upper }}</span>
+                                <strong>{{ usuario.username }}</strong>
+                            </td>
+                            <td>
+                                {% if usuario.perfil_wifi.bloqueado %}
+                                <span class="status-pill status-blocked">Bloqueado</span>
+                                {% else %}
+                                <span class="status-pill status-allowed">Liberado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="post" action="{% if usuario.perfil_wifi.bloqueado %}{% url 'portal:unblock_user' usuario.pk %}{% else %}{% url 'portal:block_user' usuario.pk %}{% endif %}">
+                                    {% csrf_token %}
+                                    <button class="action-btn {% if usuario.perfil_wifi.bloqueado %}btn-unblock{% else %}btn-block{% endif %}" type="submit">
+                                        {% if usuario.perfil_wifi.bloqueado %}
+                                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12 7V5a4 4 0 0 0-8 0v2" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+                                        <span>Desbloquear</span>
+                                        {% else %}
+                                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.6"/><path d="m5 5 6 6" stroke="currentColor" stroke-width="1.6"/></svg>
+                                        <span>Bloquear</span>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="empty-state">
+                                <span>Nenhum usuário cadastrado.</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
 {% endblock %}
