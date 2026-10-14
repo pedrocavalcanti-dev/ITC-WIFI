@@ -4,39 +4,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b2545">
+    <meta name="theme-color" content="#174c83">
     <title>{% block title %}Painel Administrativo{% endblock %} · ITC Wi-Fi</title>
-    
+
     <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="{% static 'css/portal.css' %}">
 </head>
 <body class="dashboard-body">
     <div class="portal-shell dashboard-shell">
+        <div class="bg-mesh" aria-hidden="true"></div>
         <header class="site-header">
             <a class="brand" href="{% url 'portal:home' %}" aria-label="ITC — início">
-                <div class="brand-emblem" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" fill="none">
-                        <rect width="32" height="32" rx="9" fill="#0f2b5c"/>
-                        <path d="M9 10h14M16 10v12M11 22h10" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="23" cy="9" r="2" fill="#38bdf8"/>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <span class="wordmark">ITC<span class="brand-dot">.</span></span>
-                    <span class="brand-name">Instituto Tecnológico<br>Campineiro</span>
-                </div>
+                {% include "portal/brand.html" %}
             </a>
 
             <div class="network-badge">
-                <span class="status-indicator">
-                    <span class="status-pulse"></span>
-                    <span class="status-dot"></span>
-                </span>
                 <div class="network-badge-text">
                     <span class="badge-title">Administração NAC</span>
                     <span class="badge-sub">MoonShield Core</span>

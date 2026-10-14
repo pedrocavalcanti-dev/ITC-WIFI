@@ -14,11 +14,6 @@
     const submitForms = [...document.querySelectorAll("form[data-submit-label]")];
     let submitting = false;
 
-    // Acessibilidade: bloqueia foco durante breve splash de abertura
-    if (splash) {
-        shell.inert = true;
-    }
-
     /**
      * Alterna a aba ativa entre "login" e "register"
      * @param {string} mode - "login" ou "register"
@@ -185,10 +180,8 @@
             splash.classList.add("is-finished");
             window.setTimeout(() => {
                 splash.remove();
-            }, 300);
+            }, 180);
         }
-
-        shell.inert = false;
 
         // Caso haja erros de validação retornados pelo Django, foca no primeiro campo com erro
         const activePanel = panels.find((panel) => !panel.hidden);
@@ -200,9 +193,11 @@
         }
     }
 
-    // Abertura ágil e suave: no máximo 450ms (ou imediato se prefers-reduced-motion)
-    if (splash) {
-        window.setTimeout(revealPortal, reduceMotion ? 50 : 450);
+    // Não repetir a abertura ao retornar um formulário com erros.
+    // O overlay não captura foco; CSS também limita sua duração se houver falha.
+    if (splash && !reduceMotion && shell.dataset.hasSubmission !== "true") {
+        splash.classList.add("is-visible");
+        window.setTimeout(revealPortal, 220);
     } else {
         revealPortal();
     }
